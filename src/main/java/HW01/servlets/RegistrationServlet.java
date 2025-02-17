@@ -74,7 +74,7 @@ public class RegistrationServlet extends HttpServlet {
         if (errors.isEmpty()) {
             accountService.putUserProfile(userProfile);
             resp.getWriter().println("Регистрация прошла успешно");
-            resp.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            resp.setStatus(HttpServletResponse.SC_OK);
             req.getServletContext().setAttribute("accountService", accountService);
             resp.sendRedirect("/login");
         } else {

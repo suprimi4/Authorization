@@ -48,10 +48,11 @@ public class LoginServlet extends HttpServlet {
         String name = req.getParameter("username");
         String password = req.getParameter("password");
         UserProfile userProfile = accountService.getUserProfile(name);
-        if (userProfile == null) {
+        if (userProfile.isEmpty()) {
             resp.getWriter().println("Нет зарегистрированных пользователей с данным именем   \n" +
                     "<a href = \"/\"> Назад </a>");
             resp.setStatus(401);
+            return;
         }
 
         if (userProfile.getPassword().equals(password)) {

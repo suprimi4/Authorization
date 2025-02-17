@@ -24,4 +24,8 @@ public class UserProfile {
     public String getPassword() {
         return password;
     }
+
+    public boolean isEmpty() {
+        return login.isEmpty() && email.isEmpty() && password.isEmpty();
+    }
 }
