@@ -7,14 +7,10 @@ import java.util.Map;
 
 public class AccountService {
     Map<String, UserProfile> userProfiles = new HashMap<>();
-    Map<String, UserProfile> userProfileMap = new HashMap<String, UserProfile>();
+
 
     public void putUserProfile(UserProfile userProfile) {
         userProfiles.put(userProfile.getLogin(), userProfile);
-    }
-
-    public void putUserSession(String string, UserProfile userProfile) {
-        userProfileMap.put(string, userProfile);
     }
 
 

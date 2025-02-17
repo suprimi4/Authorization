@@ -3,20 +3,21 @@ package HW01.servlets;
 import HW01.model.UserProfile;
 import HW01.services.AccountService;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class LoginServlet extends HttpServlet {
 
-    private final AccountService accountService = (AccountService) getServletContext().getAttribute("accountService");
+    private final AccountService accountService;
+
+    public LoginServlet(AccountService accountService) {
+        this.accountService = accountService;
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -28,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         resp.getWriter().println("<head><title>Авторизация</title></head>");
         resp.getWriter().println("<body>");
         resp.getWriter().println("<h2>Авторизация</h2>");
-        resp.getWriter().println("<form action='/' method='post'>");
+        resp.getWriter().println("<form action='/login' method='post'>");
         resp.getWriter().println("<label>Логин:</label>");
         resp.getWriter().println("<input type='text' id='username' name='username' required><br><br>");
         resp.getWriter().println("<label>Пароль:</label>");
@@ -50,15 +51,17 @@ public class LoginServlet extends HttpServlet {
         if (userProfile == null) {
             resp.getWriter().println("Нет зарегистрированных пользователей с данным именем   \n" +
                     "<a href = \"/\"> Назад </a>");
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.setStatus(401);
         }
 
         if (userProfile.getPassword().equals(password)) {
-            String key = req.getSession().toString();
-            accountService.putUserSession(key, userProfile);
+            resp.setStatus(200);
+            resp.sendRedirect("/mirror");
         } else {
+            resp.setStatus(401);
             resp.getWriter().println("Неверный пароль, попробуйте еще раз.  \n" +
-                    "<a href = \"/\"> Назад </a>");
+                    "<a href = \"/login\"> Назад </a>");
+
         }
 
 
