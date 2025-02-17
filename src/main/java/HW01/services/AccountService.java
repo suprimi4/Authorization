@@ -20,7 +20,8 @@ public class AccountService {
                 .stream()
                 .filter(entry -> entry.getKey().contains(name))
                 .map(Map.Entry::getValue)
-                .findFirst().orElseGet(() -> new UserProfile("", "", ""));
+                .findFirst().
+                orElse(new UserProfile("", "", ""));
     }
 
 
