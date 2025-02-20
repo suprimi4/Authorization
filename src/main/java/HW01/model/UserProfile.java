@@ -1,9 +1,14 @@
 package HW01.model;
 
-public class UserProfile {
+import java.io.Serializable;
+
+public class UserProfile implements Serializable {
+
 
     private final String login;
+
     private final String email;
+
     private final String password;
 
 
@@ -17,6 +22,7 @@ public class UserProfile {
         return login;
     }
 
+
     public String getEmail() {
         return email;
     }
@@ -24,6 +30,7 @@ public class UserProfile {
     public String getPassword() {
         return password;
     }
+
 
     public boolean isEmpty() {
         return login.isEmpty() && email.isEmpty() && password.isEmpty();

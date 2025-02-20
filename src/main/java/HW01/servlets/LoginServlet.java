@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 
 public class LoginServlet extends HttpServlet {
@@ -18,28 +19,6 @@ public class LoginServlet extends HttpServlet {
         this.accountService = accountService;
     }
 
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
-        resp.setContentType("text/html;charset=utf-8");
-
-        resp.getWriter().println("<!DOCTYPE html>");
-        resp.getWriter().println("<html>");
-        resp.getWriter().println("<head><title>Авторизация</title></head>");
-        resp.getWriter().println("<body>");
-        resp.getWriter().println("<h2>Авторизация</h2>");
-        resp.getWriter().println("<form action='/login' method='post'>");
-        resp.getWriter().println("<label>Логин:</label>");
-        resp.getWriter().println("<input type='text' id='username' name='username' required><br><br>");
-        resp.getWriter().println("<label>Пароль:</label>");
-        resp.getWriter().println("<input type='password' id='password' name='password' required><br><br>");
-        resp.getWriter().println("<button type='submit'>Зарегистрироваться</button>");
-        resp.getWriter().println("</form>");
-        resp.getWriter().println("</body>");
-        resp.getWriter().println("</html>");
-        resp.setStatus(HttpServletResponse.SC_OK);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

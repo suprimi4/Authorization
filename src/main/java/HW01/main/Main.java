@@ -1,5 +1,7 @@
 package HW01.main;
 
+
+import HW01.dbservice.DBService;
 import HW01.services.AccountService;
 import HW01.servlets.LoginServlet;
 import HW01.servlets.MirrorServlet;
@@ -13,8 +15,8 @@ import java.util.logging.Logger;
 public class Main {
     private  static  final Logger logger = Logger.getLogger("Main");
     public static void main(String[] args) throws Exception {
-
-        AccountService accountService = new AccountService();
+        DBService dbService = new DBService();
+        AccountService accountService = new AccountService(dbService);
         RegistrationServlet registrationServlet = new RegistrationServlet(accountService);
         LoginServlet loginServlet = new LoginServlet(accountService);
         MirrorServlet mirrorServlet = new MirrorServlet();

@@ -3,7 +3,6 @@ package HW01.utils;
 import HW01.model.UserProfile;
 import HW01.services.AccountService;
 
-import java.security.PublicKey;
 import java.util.regex.Pattern;
 
 public class Validator {
@@ -22,15 +21,13 @@ public class Validator {
     public static boolean isUserMailExits(AccountService accountService, UserProfile userProfile, String email) {
         return accountService.
                 getUserProfiles()
-                .values()
                 .stream()
                 .anyMatch(user -> user.getEmail().equals(userProfile.getEmail()));
     }
 
     public static boolean isUserNameExist(AccountService accountService, UserProfile userProfile, String userName) {
-       return accountService
+        return accountService
                 .getUserProfiles()
-                .values()
                 .stream()
                 .anyMatch(user -> user.getLogin().equals(userProfile.getLogin()));
     }
