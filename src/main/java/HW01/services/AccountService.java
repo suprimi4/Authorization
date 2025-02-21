@@ -41,13 +41,9 @@ public class AccountService {
 
     public List<UserProfile> getUserProfiles() {
         List<UserProfile> userProfileList = new ArrayList<>();
-        try {
-            List<UsersDataSet> usersList = dbService.getAllUsers();
-            for (UsersDataSet item : usersList) {
-                userProfileList.add(new UserProfile(item.getLogin(), item.getEmail(), item.getPassword()));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        List<UsersDataSet> usersList = dbService.getAllUsers();
+        for (UsersDataSet item : usersList) {
+            userProfileList.add(new UserProfile(item.getLogin(), item.getEmail(), item.getPassword()));
         }
 
         return userProfileList;

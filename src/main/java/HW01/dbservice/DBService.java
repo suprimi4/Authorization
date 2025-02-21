@@ -3,58 +3,41 @@ package HW01.dbservice;
 import HW01.dbservice.dao.UsersDAO;
 import HW01.dbservice.dataset.UsersDataSet;
 import HW01.exceptions.DBException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
 public class DBService {
-    private final Connection connection;
+    private final SessionFactory sessionFactory;
 
     public DBService() {
-        this.connection = getPostgresConnection();
+        Configuration configuration = getPostgresConfiguration();
+        sessionFactory = createSessionFactory(configuration);
     }
 
-    private Connection getPostgresConnection() {
+    private SessionFactory createSessionFactory(Configuration configuration) {
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
+        builder.applySettings(configuration.getProperties());
+        return configuration.buildSessionFactory(builder.build());
+    }
 
-        final String url = "jdbc:postgresql://localhost:5432/Auth";
-        final String name = "postgres";
-        final String password = "qwerty12356";
-        try {
-            return DriverManager.getConnection(url, name, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private Configuration getPostgresConfiguration() {
+        Configuration configuration = new Configuration().configure();
+        configuration.addAnnotatedClass(UsersDataSet.class);
+        return configuration;
 
-        return null;
     }
 
     public UsersDataSet getUser(String name) throws DBException {
-        try {
-            return new UsersDAO(connection).getUserByName(name);
-
-        } catch (SQLException e) {
-            throw new DBException(e);
-        }
-
-
-    }
-
-    public List<UsersDataSet> getAllUsers() throws SQLException {
-        UsersDAO dao = new UsersDAO(connection);
-        return dao.getAllUsers();
-    }
-
-    public long addUser(String name, String email, String password) throws DBException {
-        try {
-            connection.setAutoCommit(false);
-            UsersDAO dao = new UsersDAO(connection);
-            dao.createTable();
-            dao.addUser(name, email, password);
-            connection.commit();
-            return dao.getUserId(name);
+        try (Session session = sessionFactory.openSession()) {
+            UsersDAO dao = new UsersDAO(session);
+            return dao.getUserByName(name);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -62,13 +45,31 @@ public class DBService {
 
     }
 
-    public void cleanUp() throws DBException {
-        UsersDAO dao = new UsersDAO(connection);
-        try {
-            dao.dropTable();
+    public List<UsersDataSet> getAllUsers() {
+        try (Session session = sessionFactory.openSession()) {
+            UsersDAO dao = new UsersDAO(session);
+            return dao.getAllUsers();
         } catch (SQLException e) {
-            throw new DBException(e);
+            e.printStackTrace();
         }
+
+
+        return java.util.Collections.emptyList();
+    }
+
+    public long addUser(String name, String email, String password) throws DBException {
+
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            UsersDAO dao = new UsersDAO(session);
+            dao.addUser(name, email, password);
+            transaction.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return 0;
     }
 
 }
